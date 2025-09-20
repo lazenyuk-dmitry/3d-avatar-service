@@ -19,6 +19,7 @@ def body_mesh():
 
 
 def merge_meshes(face_mesh_obj, body_mesh_obj):
+  body_mesh_obj.apply_translation([0, -1.5, 0])
   return trimesh.util.concatenate([face_mesh_obj, body_mesh_obj])
 
 
