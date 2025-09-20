@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+mediapipe #работает только с версией python 3.11 и ниже
+opencv-python
+pillow
+numpy
+python-multipart

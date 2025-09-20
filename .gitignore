@@ -1,0 +1,75 @@
+# 🐍 Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# venv / virtualenv
+.venv/
+venv/
+env/
+ENV/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 📦 Packaging
+*.whl
+*.manifest
+*.spec
+
+# ☁️ FastAPI / Uvicorn
+*.db
+*.sqlite3
+
+# 📁 IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 📸 Assets / Media / Output
+*.glb
+*.gltf
+*.mp4
+*.mov
+*.avi
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# 📂 OS junk
+.DS_Store
+Thumbs.db
+
+# 🐳 Docker (опционально)
+**/.env
+docker-compose.override.yml
+
+# ⚙️ Node.js frontend (если будет)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# 🔍 PyCharm project files
+*.iml
+*.iws
+*.ipr
+.idea/
+
+# ⚗️ Blender (если используете)
+*.blend1
+*.blend2
+*.blend@
+*.blend~
+
+# 🔧 Misc
+logs/
+tmp/
+static/output/
+test_output/
