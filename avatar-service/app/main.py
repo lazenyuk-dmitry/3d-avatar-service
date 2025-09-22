@@ -72,7 +72,7 @@ async def generate_avatar_endpoint(file: UploadFile = File(...)):
         avatar_path = generate_avatar_from_image(tmp_path)
 
     # Возвращаем путь к готовому аватару (или URL)
-    return JSONResponse({"model_url": f"http://localhost:8000/{PurePosixPath(AVATAR_PATH)}"})
+    return JSONResponse({"model_url": f"http://localhost:8000/{PurePosixPath(avatar_path)}"})
 from fastapi import FastAPI
 
 @app.get("/public/avatar.glb")
