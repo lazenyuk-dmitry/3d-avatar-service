@@ -1,29 +1,29 @@
-from utils import get_path
+import numpy as np
 import trimesh
-
-def generate_avatar():
-  face_mesh_obj = face_mesh()
-  body_mesh_obj = body_mesh()
-  full_mesh = merge_meshes(face_mesh_obj, body_mesh_obj)
-  export_mesh(full_mesh)
+from face_detection import detect_face_landmarks
+from traingulation_indices import TRIANGLES
 
 
-def face_mesh():
-  asset_path = get_path("assets", "base_head.glb")
-  return trimesh.load(asset_path)
+def generate_avatar(input_image: str, output_path: str):
+    pts = np.array(detect_face_landmarks(input_image))  # shape (468, 3) в [0..1]
 
+    if pts.shape[0] < 468:
+        raise ValueError("Недостаточно точек лица для генерации меша.")
 
-def body_mesh():
-  asset_path = get_path("assets", "base_body.glb")
-  return trimesh.load(asset_path)
+    # Преобразование координат (из image space -> 3D со Y вверх)
+    x = pts[:, 0] - 0.5  # центрируем X в 0
+    y = 0.5 - pts[:, 1]  # инвертируем Y (теперь вверх)
+    z = -pts[:, 2]  # часто нужно инвертировать Z (лицо «наружу»)
 
+    V = np.stack([x, y, z], axis=1)
 
-def merge_meshes(face_mesh_obj, body_mesh_obj):
-  body_mesh_obj.apply_translation([0, -1.5, 0])
-  return trimesh.util.concatenate([face_mesh_obj, body_mesh_obj])
+    V = V - V.mean(axis=0)
+    V = V * 100.0
 
+    F = np.array(TRIANGLES, dtype=np.int32)
 
-def export_mesh(mesh_obj):
-  output_path = get_path("assets", "output_avatar.glb")
-  mesh_obj.export(output_path)
-  print(f"Экспортировано: {output_path}")
+    mesh = trimesh.Trimesh(vertices=V, faces=F, process=False)
+    mesh.fix_normals()
+    mesh.export(output_path)
+    print(f"Экспортировано: {output_path}")
+    return output_path

@@ -3,6 +3,7 @@ import mediapipe as mp
 
 mp_face_mesh = mp.solutions.face_mesh
 
+
 def detect_face_landmarks(image_path: str):
     image = cv2.imread(image_path)
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -15,6 +16,6 @@ def detect_face_landmarks(image_path: str):
         landmarks = results.multi_face_landmarks[0]
         points = []
         for lm in landmarks.landmark:
-            points.append((lm.x, lm.y, lm.z))  # нормализованные координаты
+            points.append((lm.x, lm.y, lm.z))
 
         return points
