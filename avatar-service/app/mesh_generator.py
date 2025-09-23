@@ -1,29 +1,37 @@
-import numpy as np
-import trimesh
+import numpy as np, trimesh, uuid
+from pathlib import Path
 from face_detection import detect_face_landmarks
 from traingulation_indices import TRIANGLES
-
+from blender_runner import rig_in_blender
 
 def generate_avatar(input_image: str, output_path: str):
-    pts = np.array(detect_face_landmarks(input_image))  # shape (468, 3) в [0..1]
+    output_path = Path(output_path).resolve()
+    temp_face_glb = output_path.with_name(f"face_{uuid.uuid4()}.glb")
 
+    pts = np.array(detect_face_landmarks(input_image))
     if pts.shape[0] < 468:
         raise ValueError("Недостаточно точек лица для генерации меша.")
 
-    # Преобразование координат (из image space -> 3D со Y вверх)
-    x = pts[:, 0] - 0.5  # центрируем X в 0
-    y = 0.5 - pts[:, 1]  # инвертируем Y (теперь вверх)
-    z = -pts[:, 2]  # часто нужно инвертировать Z (лицо «наружу»)
-
+    x = pts[:, 0] - 0.5
+    y = 0.5 - pts[:, 1]
+    z = -pts[:, 2]
     V = np.stack([x, y, z], axis=1)
-
-    V = V - V.mean(axis=0)
-    V = V * 100.0
+    V = (V - V.mean(axis=0)) * 100.0
 
     F = np.array(TRIANGLES, dtype=np.int32)
-
     mesh = trimesh.Trimesh(vertices=V, faces=F, process=False)
     mesh.fix_normals()
-    mesh.export(output_path)
-    print(f"Экспортировано: {output_path}")
-    return output_path
+
+    temp_face_glb.parent.mkdir(parents=True, exist_ok=True)
+    mesh.export(str(temp_face_glb))
+    print(f"[GEN] Temp face glb -> {temp_face_glb}")
+
+    # ВАЖНО: для Blender лучше posix-пути на Windows
+    rig_in_blender(
+        face_glb=temp_face_glb.as_posix(),
+        out_glb=output_path.as_posix(),
+        body_glb=Path("assets/base_body.glb").resolve().as_posix()
+    )
+
+    print(f"[GEN] Exported final -> {output_path}")
+    return str(output_path)

@@ -11,15 +11,15 @@ cd ./avatar-service
 **Windows:**
 
 ```bash
-python -m venv venv
-venv\Scripts\activate
+python -m .venv1 .venv1
+.venv1\Scripts\activate
 ```
 
 **macOS / Linux:**
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+python3 -m .venv1 .venv1
+source .venv1/bin/activate
 ```
 
 ## 3. Установка зависимостей

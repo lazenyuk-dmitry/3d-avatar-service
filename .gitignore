@@ -8,9 +8,9 @@ dist/
 build/
 *.log
 
-# venv / virtualenv
+# .venv1 / virtualenv
 .venv/
-venv/
+.venv1/
 my_venv/
 env/
 ENV/
